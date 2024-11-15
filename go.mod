@@ -1,13 +1,17 @@
-module github.com/karalabe/go-bluesky
+module github.com/tailscale/go-bluesky
 
 go 1.20
 
 require (
 	github.com/bluesky-social/indigo v0.0.0-20230504025040-8915cccc3319
 	github.com/golang-jwt/jwt/v5 v5.0.0
+	github.com/ureeves/jwt-go-secp256k1 v0.2.0
 )
 
 require (
+	github.com/btcsuite/btcd v0.0.0-20190824003749-130ea5bddde3 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/ethereum/go-ethereum v1.9.3 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
