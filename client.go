@@ -94,9 +94,11 @@ func (c *Client) Login(ctx context.Context, handle string, appkey string) error 
 	if err != nil {
 		return fmt.Errorf("%w: %v", ErrLoginUnauthorized, err)
 	}
-	// Verify and reject master credentials, sorry, no bad security practices
+	// Reject master credentials, sorry, no bad security practices
 	token, _, err := jwt.NewParser().ParseUnverified(sess.AccessJwt, jwt.MapClaims{})
-	if err != nil {
+
+	// we don't *need* to verify the jwt (hence unverified) from the client-side, so ignore verification errors
+	if err != nil && !errors.Is(err, jwt.ErrTokenUnverifiable) {
 		return err
 	}
 	if token.Claims.(jwt.MapClaims)["scope"] != "com.atproto.appPass" {
@@ -107,7 +109,9 @@ func (c *Client) Login(ctx context.Context, handle string, appkey string) error 
 	if err != nil {
 		return err
 	}
-	if token, _, err = jwt.NewParser().ParseUnverified(sess.RefreshJwt, jwt.MapClaims{}); err != nil {
+
+	// we don't *need* to verify the jwt (hence unverified) from the client-side, so ignore verification errors
+	if token, _, err = jwt.NewParser().ParseUnverified(sess.RefreshJwt, jwt.MapClaims{}); err != nil && !errors.Is(err, jwt.ErrTokenUnverifiable) {
 		return err
 	}
 	refresh, err := token.Claims.GetExpirationTime()
