@@ -258,7 +258,7 @@ func (c *Client) refreshJWT(async bool) error {
 	}
 	// Update the JWT token in the local client
 	token, _, err := jwt.NewParser().ParseUnverified(sess.AccessJwt, jwt.MapClaims{})
-	if err != nil {
+	if err != nil && !errors.Is(err, jwt.ErrTokenUnverifiable) {
 		return err
 	}
 	current, err := token.Claims.GetExpirationTime()
@@ -266,7 +266,7 @@ func (c *Client) refreshJWT(async bool) error {
 		return err
 	}
 	token, _, err = jwt.NewParser().ParseUnverified(sess.RefreshJwt, jwt.MapClaims{})
-	if err != nil {
+	if err != nil && !errors.Is(err, jwt.ErrTokenUnverifiable) {
 		return err
 	}
 	refresh, err := token.Claims.GetExpirationTime()
