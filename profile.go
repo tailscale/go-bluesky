@@ -48,6 +48,12 @@ type Profile struct {
 	Followees     []*User // Actual list of followees, nil if not yet resolved
 
 	PostCount uint // Number of posts this user made
+
+	Viewer Viewer // Information about this user related to the requesting user
+}
+
+type Viewer struct {
+	Muted bool // Whether the requesting user has this user muted
 }
 
 // User tracks some metadata about a user on a Bluesky server.
@@ -101,6 +107,9 @@ func (c *Client) FetchProfile(ctx context.Context, id string) (*Profile, error) 
 	}
 	if profile.Banner != nil {
 		p.BannerURL = *profile.Banner
+	}
+	if profile.Viewer != nil && profile.Viewer.Muted != nil {
+		p.Viewer = Viewer{Muted: *profile.Viewer.Muted}
 	}
 	return p, nil
 }
